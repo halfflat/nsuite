@@ -166,10 +166,10 @@ for var in varlist:
             warn(opts.prog, 'no common points for variable \'{}\'', var)
         continue
 
-    abserr = np.asscalar(np.max(abs(delta)))
-    abserr_lb = max(0, np.asscalar(np.max(abs(delta)-interperr)))
+    abserr = np.max(abs(delta)).item()
+    abserr_lb = max(0, np.max(abs(delta)-interperr).item())
 
-    r_absmax = np.asscalar(np.max(abs(r.reindex_like(delta))))
+    r_absmax = np.max(abs(r.reindex_like(delta))).item()
     relerr = abserr/r_absmax if r_absmax>0 else 0
     relerr_lb = abserr_lb/r_absmax if r_absmax>0 else 0
 
