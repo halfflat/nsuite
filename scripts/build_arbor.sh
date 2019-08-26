@@ -22,6 +22,33 @@ if [ ! -f "$arb_checked_flag" ]; then
         git checkout "$ns_arb_branch" >> "$out" 2>&1
         [ $? != 0 ] && exit_on_error "see ${out}"
     fi
+
+    # workaround for 0.2.1
+    if [ "$ns_arb_branch" == "v0.2.1" ]; then
+        patch -p1 -d "$arb_repo_path" << '__end__'
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -440,5 +440,6 @@ install(
+     FILES
+         "${CMAKE_CURRENT_BINARY_DIR}/arbor-config.cmake"
+         "${CMAKE_CURRENT_BINARY_DIR}/arbor-config-version.cmake"
++        cmake/FindUnwind.cmake
+     DESTINATION "${cmake_config_dir}")
+ 
+diff --git a/cmake/arbor-config.cmake.in b/cmake/arbor-config.cmake.in
+index e5bc0ca..04a3532 100644
+--- a/cmake/arbor-config.cmake.in
++++ b/cmake/arbor-config.cmake.in
+@@ -1,5 +1,7 @@
+ include(CMakeFindDependencyMacro)
+ 
++set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_LIST_DIR}")
++
+ foreach(dep @arbor_export_dependencies@)
+     find_dependency(${dep})
+ endforeach()
+__end__
+    fi
     touch "${arb_checked_flag}"
 else
     msg "ARBOR: repository has already downloaded"
