@@ -77,7 +77,7 @@ struct rc_exp2syn_spike_recipe: public arb::recipe {
 
     util::any get_global_properties(cell_kind kind) const override {
         arb::cable_cell_global_properties prop;
-        prop.default_parameters.init_membrane_potential = erev;
+        prop.default_parameters.init_membrane_potential = (double)erev;
         prop.ion_species.clear();
 
         // Relevant parameters will be set on the cell itself.
